@@ -1,0 +1,23 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Lint
+      run: |
+        $rootPath = [System.IO.Path]::GetTempPath()
+        $zipPath = Join-Path $rootPath arm-template-toolkit.zip
+        Invoke-WebRequest -OutFile $zipPath http://aka.ms/arm-ttk-latest
+        Expand-Archive $zipPath -DestinationPath $rootPath
+        Import-Module (Join-Path $rootPath arm-ttk/arm-ttk.psd1)
+        Test-AzTemplate $(Build.SourcesDirectory)/infrastructure/azuredeploy.json
+      shell: pwsh
