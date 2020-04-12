@@ -2,6 +2,10 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "clusterShortname": {
+      "type": "string",
+      "defaultValue": "akswithacr"
+    },
     "acrReference": {
       "type": "object",
       "defaultValue": {
@@ -15,7 +19,10 @@
     },
     "location": {
       "type": "string",
-      "defaultValue": "[resourceGroup().location]"
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure location the cluster will be deployed in"
+      }
     }
   },
   "variables": {
@@ -25,9 +32,9 @@
     },
     "commonTags": "[resourceGroup().tags]",
     "environment": "[variables('commonTags')['Environment']]",
-    "aksName": "[conventions.resourceName('akscanary', variables('environment'), variables('regionMapping')[parameters('location')])]",
+    "aksName": "[conventions.resourceName(parameters('clusterShortname'), variables('environment'), variables('regionMapping')[parameters('location')])]",
     "acrPullRoleDefinitionid": "7f951dda-4ed3-4680-a7ca-43fe172d538d",
-    "aksResourceId": "[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.ContainerService/managedClusters', variables('aksName'))]"
+    "aksResourceId": "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksName'))]"
   },
   "resources": [
     {
