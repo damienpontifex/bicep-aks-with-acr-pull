@@ -17,7 +17,9 @@ jobs:
         $rootPath = [System.IO.Path]::GetTempPath()
         $zipPath = Join-Path $rootPath arm-template-toolkit.zip
         Invoke-WebRequest -OutFile $zipPath http://aka.ms/arm-ttk-latest
+
         Expand-Archive $zipPath -DestinationPath $rootPath
+
         Import-Module (Join-Path $rootPath arm-ttk/arm-ttk.psd1)
-        Test-AzTemplate $(Build.SourcesDirectory)/infrastructure/azuredeploy.json
+        Test-AzTemplate azuredeploy.json
       shell: pwsh
