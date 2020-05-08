@@ -40,7 +40,7 @@
     {
       "name": "[variables('aksName')]",
       "type": "Microsoft.ContainerService/managedClusters",
-      "apiVersion": "2020-02-01",
+      "apiVersion": "2020-03-01",
       "location": "[parameters('location')]",
       "tags": "[variables('commonTags')]",
       "properties": {
@@ -53,11 +53,18 @@
         "addonProfiles": {
           "kubeDashboard": {
             "enabled": false
+          },
+          "aad-pod-identity": {
+            "enabled": true
+          },
+          "keyvault-flexvolume": {
+            "enabled": true
           }
         },
         "agentPoolProfiles": [
           {
-            "count": 2,
+            "count": 1,
+            "mode": "System",
             "vmSize": "Standard_B2s",
             "osType": "Linux",
             "type": "VirtualMachineScaleSets",
